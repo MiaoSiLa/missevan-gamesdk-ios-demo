@@ -16,6 +16,8 @@
 		8DA5CD2E273B730C0028ACF3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5CD2D273B730C0028ACF3 /* main.m */; };
 		8DA5CD38273B730C0028ACF3 /* MESDKDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5CD37273B730C0028ACF3 /* MESDKDemoTests.m */; };
 		8DA5CD43273B730C0028ACF3 /* MESDKDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5CD42273B730C0028ACF3 /* MESDKDemoUITests.m */; };
+		8DA5CDF7273B87A00028ACF3 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA5CDF6273B87890028ACF3 /* libc++.tbd */; };
+		8DA5CDFB273B8AD00028ACF3 /* MESDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA5CDFA273B8AD00028ACF3 /* MESDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +56,8 @@
 		8DA5CD3E273B730C0028ACF3 /* MESDKDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MESDKDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DA5CD42273B730C0028ACF3 /* MESDKDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MESDKDemoUITests.m; sourceTree = "<group>"; };
 		8DA5CD44273B730C0028ACF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8DA5CDF6273B87890028ACF3 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		8DA5CDFA273B8AD00028ACF3 /* MESDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MESDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +65,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8DA5CDFB273B8AD00028ACF3 /* MESDK.framework in Frameworks */,
+				8DA5CDF7273B87A00028ACF3 /* libc++.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,10 +90,12 @@
 		8DA5CD0F273B730A0028ACF3 = {
 			isa = PBXGroup;
 			children = (
+				8DA5CDF0273B86430028ACF3 /* MESDK */,
 				8DA5CD1A273B730A0028ACF3 /* MESDKDemo */,
 				8DA5CD36273B730C0028ACF3 /* MESDKDemoTests */,
 				8DA5CD41273B730C0028ACF3 /* MESDKDemoUITests */,
 				8DA5CD19273B730A0028ACF3 /* Products */,
+				8DA5CDF5273B87890028ACF3 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -135,6 +143,22 @@
 				8DA5CD44273B730C0028ACF3 /* Info.plist */,
 			);
 			path = MESDKDemoUITests;
+			sourceTree = "<group>";
+		};
+		8DA5CDF0273B86430028ACF3 /* MESDK */ = {
+			isa = PBXGroup;
+			children = (
+				8DA5CDFA273B8AD00028ACF3 /* MESDK.framework */,
+			);
+			path = MESDK;
+			sourceTree = "<group>";
+		};
+		8DA5CDF5273B87890028ACF3 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8DA5CDF6273B87890028ACF3 /* libc++.tbd */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -375,7 +399,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -428,7 +452,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -442,12 +466,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 66546F8B45;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/MESDK",
+				);
 				INFOPLIST_FILE = MESDKDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 4.7.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.missevan.CatEarFM.MESDKDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -461,12 +491,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 66546F8B45;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/MESDK",
+				);
 				INFOPLIST_FILE = MESDKDemo/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 4.7.3;
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.missevan.CatEarFM.MESDKDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

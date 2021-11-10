@@ -1,0 +1,6 @@
+framework module MESDK {
+  umbrella header "MESDK.h"
+
+  export *
+  module * { export * }
+}

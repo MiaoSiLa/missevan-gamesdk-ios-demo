@@ -7,6 +7,8 @@
 
 #import "ViewController.h"
 
+#import <MESDK/MESDK.h>
+
 @interface ViewController ()
 
 @end
@@ -16,6 +18,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    [[MESDKHandler shareHandler] loginWithAccount:@"353339279@qq.com" Password:@"111111"];
 }
 
 
