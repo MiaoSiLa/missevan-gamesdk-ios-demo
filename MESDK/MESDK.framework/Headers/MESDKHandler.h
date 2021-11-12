@@ -6,6 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,26 +15,30 @@ NS_ASSUME_NONNULL_BEGIN
 /*
  *
  */
-@property (nonatomic, strong) NSString *server_id;
+@property (nonatomic, copy) NSString *server_id;
 /*
  *
  */
-@property (nonatomic, strong) NSString *merchant_id;
+@property (nonatomic, copy) NSString *merchant_id;
 /*
  *
  */
-@property (nonatomic, strong) NSString *app_id;
+@property (nonatomic, copy) NSString *app_id;
 /*
  *
  */
-@property (nonatomic, strong) NSString *app_key;
+@property (nonatomic, copy) NSString *app_key;
 
 
 + (instancetype)shareHandler;
 
 - (void)initSDK;
 
+- (NSString *)SDKVersion;
+
 - (void)loginWithAccount:(NSString *)account Password:(NSString *)passowrd;
+
+- (void)showLoginWithViewController:(UIViewController *)viewController completion:(void (^)(void))compltion;
 
 @end
 
