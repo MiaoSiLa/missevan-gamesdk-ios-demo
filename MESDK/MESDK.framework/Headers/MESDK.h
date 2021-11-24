@@ -16,3 +16,4 @@ FOUNDATION_EXPORT const unsigned char MESDKVersionString[];
 // In this header, you should import all the public headers of your framework using statements like #import <MESDK/PublicHeader.h>
 
 #import <MESDK/MESDKHandler.h>
+#import <MESDK/MESDKStatusCode.h>

@@ -13,15 +13,15 @@ NS_ASSUME_NONNULL_BEGIN
 @interface MESDKHandler : NSObject
 
 /*
- *
+ *  服务 ID
  */
 @property (nonatomic, copy) NSString *server_id;
 /*
- *
+ *  商户 ID
  */
 @property (nonatomic, copy) NSString *merchant_id;
 /*
- *
+ *  应用 ID
  */
 @property (nonatomic, copy) NSString *app_id;
 /*
@@ -31,14 +31,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 + (instancetype)shareHandler;
-
-- (void)initSDK;
-
 - (NSString *)SDKVersion;
 
-- (void)loginWithAccount:(NSString *)account Password:(NSString *)passowrd;
+- (void)launchSDKWithCompletion:(void (^)(NSString *statusCode, NSString * _Nullable infoStr))completion;
+- (void)exitSDKWithCompltion:(void (^)(NSString *statusCode, NSString * _Nullable infoStr))completion;
 
-- (void)showLoginWithViewController:(UIViewController *)viewController completion:(void (^)(void))compltion;
+- (void)showProtocolViewWithViewController:(UIViewController *)viewController completion:(void (^)(NSString *statusCode))completion;
+- (void)hideProtocolView;
 
 @end
 
