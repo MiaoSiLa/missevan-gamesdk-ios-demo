@@ -19,12 +19,7 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
     
-    MESDKHandler *handler = [MESDKHandler shareHandler];
-    handler.app_id = @"1";
-    handler.merchant_id = @"1";
-    handler.server_id = @"1";
-    handler.app_key = @"JqCB4Jun1pWYaoiTbhC2a$0icKv2JSsu";
-    [handler launchSDKWithCompletion:^(NSString * _Nonnull statusCode, NSString * _Nullable infoStr) {
+    [[MESDKHandler shareHandler] launchSDKWithAppID:@"1" AppKey:@"JqCB4Jun1pWYaoiTbhC2a$0icKv2JSsu" ServerID:@"1" MerchantID:@"1" Completion:^(NSString * _Nullable infoStr, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeSuccess]) {
             NSLog(@"初始化成功");
         } else {

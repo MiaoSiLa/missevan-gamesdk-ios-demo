@@ -33,11 +33,14 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)shareHandler;
 - (NSString *)SDKVersion;
 
-- (void)launchSDKWithCompletion:(void (^)(NSString *statusCode, NSString * _Nullable infoStr))completion;
-- (void)exitSDKWithCompltion:(void (^)(NSString *statusCode, NSString * _Nullable infoStr))completion;
+- (void)launchSDKWithAppID:(NSString *)app_id AppKey:(NSString *)app_key ServerID:(NSString *)server_id MerchantID:(NSString *)merchant_id Completion:(void (^)(NSString * _Nullable infoStr, NSString *statusCode))completion;
+- (void)exitSDKWithCompltion:(void (^)(NSString * _Nullable infoStr, NSString *statusCode))completion;
 
 - (void)showProtocolViewWithViewController:(UIViewController *)viewController completion:(void (^)(NSString *statusCode))completion;
 - (void)hideProtocolView;
+
+- (void)showLoginWithViewController:(UIViewController *)viewController completion:(void (^)(NSDictionary *user, NSString *statusCode))completion;
+- (void)logoutWithCompletion:(void (^)(NSString *statusCode))completion;
 
 @end
 
