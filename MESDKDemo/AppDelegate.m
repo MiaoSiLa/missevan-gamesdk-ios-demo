@@ -7,6 +7,8 @@
 
 #import "AppDelegate.h"
 
+#import <MESDK/MESDK.h>
+
 @interface AppDelegate ()
 
 @end
@@ -16,6 +18,19 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    
+    [[MESDKHandler shareHandler] launchSDKWithAppID:@"1" AppKey:@"JqCB4Jun1pWYaoiTbhC2a$0icKv2JSsu" ServerID:@"1" MerchantID:@"1" Completion:^(NSString * _Nullable infoStr, NSString * _Nonnull statusCode) {
+        if ([statusCode isEqualToString:SDKCodeSuccess]) {
+            NSLog(@"初始化成功");
+        } else {
+            if (infoStr) {
+                NSLog(@"%@", infoStr);
+            } else {
+                NSLog(@"初始化失败");
+            }
+        }
+    }];
+    
     return YES;
 }
 
