@@ -29,6 +29,8 @@ static NSString * const SDKCodeLogoutFailed = @"300101";
 static NSString * const SDKCodeUnknownError = @"900000";
 // 服务器失败
 static NSString * const SDKCodeServersError = @"900001";
+// Token 过期
+static NSString * const SDKCodeExpiredToken = @"900002";
 
 
 

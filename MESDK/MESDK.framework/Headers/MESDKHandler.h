@@ -29,7 +29,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (nonatomic, copy) NSString *app_key;
 
-
+/*
+ *  SDK 单例
+ */
 + (instancetype)shareHandler;
 - (NSString *)SDKVersion;
 
@@ -41,6 +43,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (void)showLoginWithViewController:(UIViewController *)viewController completion:(void (^)(NSDictionary *user, NSString *statusCode))completion;
 - (void)logoutWithCompletion:(void (^)(NSString *statusCode))completion;
+
+- (void)getUserInfoWithToken:(NSString *)token completion:(void (^)(NSDictionary *user_info, NSString *statusCode))completion;
+
+- (void)userAcceptProtocolWithCompletion:(void (^)(NSString *statusCode))completion;
 
 @end
 

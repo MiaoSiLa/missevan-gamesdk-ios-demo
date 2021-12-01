@@ -58,13 +58,21 @@
             weakSelf.username_label.text = [NSString stringWithFormat:@"Name: %@", user[@"username"]];
             weakSelf.realname_label.text = [user[@"realname_verified"] boolValue] ? @"RealName: YES" : @"RealName: NO";
             [weakSelf.avatar_imgview sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", user[@"avatar"]]]];
+            [[MESDKHandler shareHandler] getUserInfoWithToken:[NSString stringWithFormat:@"%@", user[@"token"]] completion:^(NSDictionary * _Nonnull user_info, NSString * _Nonnull statusCode) {
+                
+            }];
         } else {
             NSLog(@"登录失败");
         }
     }];
 }
 - (void)clickLogoutButtonAction:(UIButton *)sender {
+    __weak typeof(self) weakSelf = self;
     [[MESDKHandler shareHandler] logoutWithCompletion:^(NSString * _Nonnull statusCode) {
+        weakSelf.avatar_imgview.image = nil;
+        weakSelf.userid_label.text = @"";
+        weakSelf.username_label.text = @"";
+        weakSelf.realname_label.text = @"";
         if ([statusCode isEqualToString:SDKCodeLogoutSuccess]) {
             NSLog(@"退出登录成功");
         } else {
@@ -84,6 +92,9 @@
         if ([statusCode isEqualToString:SDKCodeProtocolConfirm]) {
             NSLog(@"确认协议");
             [[MESDKHandler shareHandler] hideProtocolView];
+            [[MESDKHandler shareHandler] userAcceptProtocolWithCompletion:^(NSString * _Nonnull statusCode) {
+                
+            }];
         } else if ([statusCode isEqualToString:SDKCodeProtocolReject]) {
             NSLog(@"拒绝协议");
             exit(0);
