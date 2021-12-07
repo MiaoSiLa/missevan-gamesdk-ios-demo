@@ -12,6 +12,7 @@
 
 // 接口成功
 static NSString * const SDKCodeSuccess = @"100000";
+static NSString * const SDKCodeUserCancel = @"100001";
 
 // 协议
 static NSString * const SDKCodeProtocolConfirm = @"200000";
@@ -20,10 +21,13 @@ static NSString * const SDKCodeProtocolUpdateReject = @"200101";
 
 // 登录
 static NSString * const SDKCodeLoginSuccess = @"300000";
-static NSString * const SDKCodeLoginUserCancel = @"300001";
 
 static NSString * const SDKCodeLogoutSuccess = @"300100";
 static NSString * const SDKCodeLogoutFailed = @"300101";
+
+static NSString * const SDKCodeCertificateSuccess = @"300200";
+
+static NSString * const SDKCodeChangeUser = @"300300";
 
 // 未知失败
 static NSString * const SDKCodeUnknownError = @"900000";

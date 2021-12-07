@@ -14,11 +14,11 @@
 		</data>
 		<key>Headers/MESDKHandler.h</key>
 		<data>
-		Yss+giqSFx9Hy8CQ+5Jq0AL9HqA=
+		Zo6RMLJlDcDgaOHhwx3CoJao2MY=
 		</data>
 		<key>Headers/MESDKStatusCode.h</key>
 		<data>
-		BAllKfEYIX+g7qocbNzQN/2ZSwo=
+		MMvlQSckvBP77Bb0QVf3wo00xGI=
 		</data>
 		<key>Info.plist</key>
 		<data>
@@ -83,6 +83,18 @@
 		<key>MESDKResource.bundle/global_back@3x.png</key>
 		<data>
 		5gSpI8NT4lRw6wotEkdu2m/LhJc=
+		</data>
+		<key>MESDKResource.bundle/global_change.png</key>
+		<data>
+		CvJYTIzpSpxHm5KDvmrybiR79Dc=
+		</data>
+		<key>MESDKResource.bundle/global_change@2x.png</key>
+		<data>
+		dz+bvTCjStehTxmRY8/dUg0ozCw=
+		</data>
+		<key>MESDKResource.bundle/global_change@3x.png</key>
+		<data>
+		XLjaxoz3yVYe0JIbB6By000CweY=
 		</data>
 		<key>MESDKResource.bundle/global_checkmark_normal.png</key>
 		<data>
@@ -214,22 +226,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			Yss+giqSFx9Hy8CQ+5Jq0AL9HqA=
+			Zo6RMLJlDcDgaOHhwx3CoJao2MY=
 			</data>
 			<key>hash2</key>
 			<data>
-			AYakjg7sDyuaSgRSGOOv0LrDb6gDGed8o3BlnEFdHi8=
+			/Wvw3Yn71rzSN7XYNXa5bUUGsCodO+ZCTNHrRyrzIQ0=
 			</data>
 		</dict>
 		<key>Headers/MESDKStatusCode.h</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			BAllKfEYIX+g7qocbNzQN/2ZSwo=
+			MMvlQSckvBP77Bb0QVf3wo00xGI=
 			</data>
 			<key>hash2</key>
 			<data>
-			O7u3bqYJfl96aIEfZdmBtTv+5M1Hs+tHE4BMFEjW+hI=
+			IRn/kgBxTcVcK1/V3auYoxSBDvzEWa2WWVTZiyrKCnM=
 			</data>
 		</dict>
 		<key>MESDKResource.bundle/an_girl_V3_1.png</key>
@@ -395,6 +407,39 @@
 			<key>hash2</key>
 			<data>
 			Jc2RUJPi70jqDPQVpW60vrrltJKklQSRFKUn7/VumhM=
+			</data>
+		</dict>
+		<key>MESDKResource.bundle/global_change.png</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			CvJYTIzpSpxHm5KDvmrybiR79Dc=
+			</data>
+			<key>hash2</key>
+			<data>
+			dirJPq9LRove+ATqhrgoqVm6cW4VLIigAXrOIXuaNbY=
+			</data>
+		</dict>
+		<key>MESDKResource.bundle/global_change@2x.png</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			dz+bvTCjStehTxmRY8/dUg0ozCw=
+			</data>
+			<key>hash2</key>
+			<data>
+			9vDidYLyoHSEFiM+D3KRu9pcs52oiMfU/87zr8iMevs=
+			</data>
+		</dict>
+		<key>MESDKResource.bundle/global_change@3x.png</key>
+		<dict>
+			<key>hash</key>
+			<data>
+			XLjaxoz3yVYe0JIbB6By000CweY=
+			</data>
+			<key>hash2</key>
+			<data>
+			7U8bPQf7HwSWmbeN9Y3/0EqXQTN9RFvIcBm3zR/ZI8w=
 			</data>
 		</dict>
 		<key>MESDKResource.bundle/global_checkmark_normal.png</key>
