@@ -22,6 +22,7 @@
 @property (nonatomic, strong) UIButton *login_button;
 @property (nonatomic, strong) UIButton *logout_button;
 @property (nonatomic, strong) UIButton *protocol_button;
+@property (nonatomic, strong) UIButton *realname_button;
 
 @end
 
@@ -46,6 +47,7 @@
     [self.view addSubview:self.login_button];
     [self.view addSubview:self.logout_button];
     [self.view addSubview:self.protocol_button];
+    [self.view addSubview:self.realname_button];
 }
 
 #pragma mark - Button Action
@@ -58,13 +60,44 @@
             weakSelf.username_label.text = [NSString stringWithFormat:@"Name: %@", user[@"username"]];
             weakSelf.realname_label.text = [user[@"realname_verified"] boolValue] ? @"RealName: YES" : @"RealName: NO";
             [weakSelf.avatar_imgview sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", user[@"avatar"]]]];
+            
+            //Show Banner
+            [[MESDKHandler shareHandler] showUserInfoBannerWithViewController:weakSelf Avatar:user[@"avatar"] Name:user[@"username"] completion:^(NSString * _Nonnull statusCode) {
+                if ([statusCode isEqualToString:SDKCodeChangeUser]) {
+                    NSLog(@"更换用户");
+                    [weakSelf clickLogoutButtonAction:nil];
+                }
+            }];
+            
+            if (![user[@"realname_verified"] boolValue]) {
+                //Show Realname
+                [[MESDKHandler shareHandler] showRealNameCertificateViewWithViewController:weakSelf completion:^(NSString * _Nonnull statusCode) {
+                    if ([statusCode isEqualToString:SDKCodeCertificateSuccess]) {
+                        NSLog(@"认证成功");
+                    } else if ([statusCode isEqualToString:SDKCodeUserCancel]) {
+                        NSLog(@"用户取消");
+                    } else {
+                        NSLog(@"发生错误");
+                    }
+                }];
+            }
+            
+            //Get UserInfo
+            [[MESDKHandler shareHandler] getUserInfoWithToken:[NSString stringWithFormat:@"%@", user[@"token"]] completion:^(NSDictionary * _Nonnull user_info, NSString * _Nonnull statusCode) {
+
+            }];
         } else {
             NSLog(@"登录失败");
         }
     }];
 }
 - (void)clickLogoutButtonAction:(UIButton *)sender {
+    __weak typeof(self) weakSelf = self;
     [[MESDKHandler shareHandler] logoutWithCompletion:^(NSString * _Nonnull statusCode) {
+        weakSelf.avatar_imgview.image = nil;
+        weakSelf.userid_label.text = @"";
+        weakSelf.username_label.text = @"";
+        weakSelf.realname_label.text = @"";
         if ([statusCode isEqualToString:SDKCodeLogoutSuccess]) {
             NSLog(@"退出登录成功");
         } else {
@@ -84,12 +117,26 @@
         if ([statusCode isEqualToString:SDKCodeProtocolConfirm]) {
             NSLog(@"确认协议");
             [[MESDKHandler shareHandler] hideProtocolView];
+            [[MESDKHandler shareHandler] userAcceptProtocolWithCompletion:^(NSString * _Nonnull statusCode) {
+                
+            }];
         } else if ([statusCode isEqualToString:SDKCodeProtocolReject]) {
             NSLog(@"拒绝协议");
             exit(0);
         } else if ([statusCode isEqualToString:SDKCodeProtocolUpdateReject]) {
             NSLog(@"拒绝更新协议");
             exit(0);
+        } else {
+            NSLog(@"发生错误");
+        }
+    }];
+}
+- (void)clickRealNameButtonAction:(UIButton *)sender {
+    [[MESDKHandler shareHandler] showRealNameCertificateViewWithViewController:self completion:^(NSString * _Nonnull statusCode) {
+        if ([statusCode isEqualToString:SDKCodeCertificateSuccess]) {
+            NSLog(@"认证成功");
+        } else if ([statusCode isEqualToString:SDKCodeUserCancel]) {
+            NSLog(@"用户取消");
         } else {
             NSLog(@"发生错误");
         }
@@ -177,6 +224,20 @@
         _avatar_imgview.layer.masksToBounds = YES;
     }
     return _avatar_imgview;
+}
+- (UIButton *)realname_button {
+    if (!_realname_button) {
+        _realname_button = [[UIButton alloc] initWithFrame:CGRectMake(15, 260, ([UIScreen mainScreen].bounds.size.width - 60) / 3.f, 40)];
+        [_realname_button setTitle:@"实名认证" forState:UIControlStateNormal];
+        [_realname_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        _realname_button.layer.cornerRadius = 5.f;
+        _realname_button.layer.masksToBounds = YES;
+        _realname_button.layer.borderWidth = .5f;
+        _realname_button.layer.borderColor = [UIColor blackColor].CGColor;
+        
+        [_realname_button addTarget:self action:@selector(clickRealNameButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _realname_button;
 }
 
 
