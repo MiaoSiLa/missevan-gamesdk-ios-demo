@@ -36,7 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSString *)SDKVersion;
 
 - (void)launchSDKWithAppID:(NSString *)app_id AppKey:(NSString *)app_key ServerID:(NSString *)server_id MerchantID:(NSString *)merchant_id Completion:(void (^)(NSString * _Nullable infoStr, NSString *statusCode))completion;
-- (void)exitSDKWithCompltion:(void (^)(NSString * _Nullable infoStr, NSString *statusCode))completion;
+- (void)getConfigWithCompletion:(void (^)(NSDictionary * _Nullable infoDic, NSString *statusCode))completion;
+- (void)exitSDKWithViewController:(UIViewController *)viewController WithCompltion:(void (^)(NSString * _Nullable infoStr, NSString *statusCode))completion;
 
 //Protocol
 - (void)showProtocolViewWithViewController:(UIViewController *)viewController completion:(void (^)(NSString *statusCode))completion;
@@ -48,8 +49,12 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)logoutWithCompletion:(void (^)(NSString *statusCode))completion;
 
 //UserInfo
-- (void)getUserInfoWithToken:(NSString *)token completion:(void (^)(NSDictionary *user_info, NSString *statusCode))completion;
+- (void)getUserInfoCompletion:(void (^)(NSDictionary *user_info, NSString *statusCode))completion;
 - (void)showUserInfoBannerWithViewController:(UIViewController *)viewController Avatar:(NSString *)aURL Name:(NSString *)uName completion:(void (^)(NSString *statusCode))completion;
+
+//Role
+- (void)createRoleWithRoleName:(NSString *)role_name roleID:(NSString *)role_id serverName:(NSString *)server_name completion:(void (^)(NSDictionary * _Nullable infoDic, NSString *statusCode))completion;
+- (void)notifyZoneWithRoleName:(NSString *)role_name roldID:(NSString *)role_id serverName:(NSString *)server_name completion:(void (^)(NSDictionary * _Nullable infoDic, NSString *statusCode))completion;
 
 //RealName Certificate
 - (void)showRealNameCertificateViewWithViewController:(UIViewController *)viewController completion:(void (^)(NSString *statusCode))completion;

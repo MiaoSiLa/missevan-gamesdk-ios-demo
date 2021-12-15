@@ -22,6 +22,13 @@
     [[MESDKHandler shareHandler] launchSDKWithAppID:@"1" AppKey:@"JqCB4Jun1pWYaoiTbhC2a$0icKv2JSsu" ServerID:@"1" MerchantID:@"1" Completion:^(NSString * _Nullable infoStr, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeSuccess]) {
             NSLog(@"初始化成功");
+            [[MESDKHandler shareHandler] getConfigWithCompletion:^(NSDictionary * _Nullable infoDic, NSString * _Nonnull statusCode) {
+                if ([statusCode isEqualToString:SDKCodeSuccess] && infoDic) {
+                    NSLog(@"获取配置成功: %@", infoDic);
+                } else {
+                    NSLog(@"获取配置失败");
+                }
+            }];
         } else {
             if (infoStr) {
                 NSLog(@"%@", infoStr);

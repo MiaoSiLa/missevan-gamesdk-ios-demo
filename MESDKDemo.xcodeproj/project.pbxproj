@@ -24,7 +24,6 @@
 		8D9F57C22750D548003B62D8 /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D9F57AD2750D548003B62D8 /* UIView+WebCacheOperation.m */; };
 		8D9F57C32750D548003B62D8 /* UIButton+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D9F57B12750D548003B62D8 /* UIButton+WebCache.m */; };
 		8DA295F9275DF93C00A29AA1 /* MESDKResource.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8DA295F8275DF93C00A29AA1 /* MESDKResource.bundle */; };
-		8DA29603275E1A1100A29AA1 /* MESDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA29602275E1A1100A29AA1 /* MESDK.framework */; };
 		8DA5CD1D273B730A0028ACF3 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5CD1C273B730A0028ACF3 /* AppDelegate.m */; };
 		8DA5CD20273B730A0028ACF3 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5CD1F273B730A0028ACF3 /* SceneDelegate.m */; };
 		8DA5CD23273B730A0028ACF3 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5CD22273B730A0028ACF3 /* ViewController.m */; };
@@ -35,6 +34,7 @@
 		8DA5CD38273B730C0028ACF3 /* MESDKDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5CD37273B730C0028ACF3 /* MESDKDemoTests.m */; };
 		8DA5CD43273B730C0028ACF3 /* MESDKDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5CD42273B730C0028ACF3 /* MESDKDemoUITests.m */; };
 		8DA5CDF7273B87A00028ACF3 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA5CDF6273B87890028ACF3 /* libc++.tbd */; };
+		8DB177EF2769E98600B347CB /* MESDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DB177EE2769E98600B347CB /* MESDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,7 +89,6 @@
 		8D9F57B12750D548003B62D8 /* UIButton+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIButton+WebCache.m"; sourceTree = "<group>"; };
 		8D9F57B22750D548003B62D8 /* UIImage+GIF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+GIF.h"; sourceTree = "<group>"; };
 		8DA295F8275DF93C00A29AA1 /* MESDKResource.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = MESDKResource.bundle; sourceTree = "<group>"; };
-		8DA29602275E1A1100A29AA1 /* MESDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MESDK.framework; sourceTree = "<group>"; };
 		8DA5CD18273B730A0028ACF3 /* MESDKDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MESDKDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8DA5CD1B273B730A0028ACF3 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		8DA5CD1C273B730A0028ACF3 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -109,6 +108,7 @@
 		8DA5CD42273B730C0028ACF3 /* MESDKDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MESDKDemoUITests.m; sourceTree = "<group>"; };
 		8DA5CD44273B730C0028ACF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DA5CDF6273B87890028ACF3 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		8DB177EE2769E98600B347CB /* MESDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MESDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,7 +117,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DA5CDF7273B87A00028ACF3 /* libc++.tbd in Frameworks */,
-				8DA29603275E1A1100A29AA1 /* MESDK.framework in Frameworks */,
+				8DB177EF2769E98600B347CB /* MESDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,7 +239,7 @@
 		8DA5CDF0273B86430028ACF3 /* MESDK */ = {
 			isa = PBXGroup;
 			children = (
-				8DA29602275E1A1100A29AA1 /* MESDK.framework */,
+				8DB177EE2769E98600B347CB /* MESDK.framework */,
 				8DA295F8275DF93C00A29AA1 /* MESDKResource.bundle */,
 			);
 			path = MESDK;
@@ -578,6 +578,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 66546F8B45;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/MESDK",
@@ -604,6 +605,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 9;
 				DEVELOPMENT_TEAM = 66546F8B45;
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/MESDK",
