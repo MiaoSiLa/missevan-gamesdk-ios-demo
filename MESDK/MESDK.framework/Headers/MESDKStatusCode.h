@@ -33,8 +33,13 @@ static NSString * const SDKCodeChangeUser = @"300300";
 static NSString * const SDKCodeUnknownError = @"900000";
 // 服务器失败
 static NSString * const SDKCodeServersError = @"900001";
+// 参数不合法
+static NSString * const SDKCodeParametersIllegal = @"900002";
+// 需要登录
+static NSString * const SDKCodeNeedLogin = @"900003";
 // Token 过期
-static NSString * const SDKCodeExpiredToken = @"900002";
+static NSString * const SDKCodeExpiredToken = @"900101";
+static NSString * const SDKCodeTeenagerForbidden = @"900102";
 
 
 

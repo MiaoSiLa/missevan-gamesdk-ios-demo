@@ -23,6 +23,12 @@
 @property (nonatomic, strong) UIButton *logout_button;
 @property (nonatomic, strong) UIButton *protocol_button;
 @property (nonatomic, strong) UIButton *realname_button;
+@property (nonatomic, strong) UIButton *exit_button;
+
+@property (nonatomic, strong) UIButton *role_button;
+@property (nonatomic, strong) UIButton *notify_button;
+
+@property (nonatomic, strong) UILabel *requestinfo_label;
 
 @end
 
@@ -48,6 +54,10 @@
     [self.view addSubview:self.logout_button];
     [self.view addSubview:self.protocol_button];
     [self.view addSubview:self.realname_button];
+    [self.view addSubview:self.exit_button];
+    [self.view addSubview:self.role_button];
+    [self.view addSubview:self.notify_button];
+    [self.view addSubview:self.requestinfo_label];
 }
 
 #pragma mark - Button Action
@@ -83,8 +93,12 @@
             }
             
             //Get UserInfo
-            [[MESDKHandler shareHandler] getUserInfoWithToken:[NSString stringWithFormat:@"%@", user[@"token"]] completion:^(NSDictionary * _Nonnull user_info, NSString * _Nonnull statusCode) {
-
+            [[MESDKHandler shareHandler] getUserInfoCompletion:^(NSDictionary * _Nonnull user_info, NSString * _Nonnull statusCode) {
+                if ([statusCode isEqual:SDKCodeSuccess]) {
+                    NSLog(@"UserInfo: %@", user_info);
+                } else {
+                    NSLog(@"发生错误");
+                }
             }];
         } else {
             NSLog(@"登录失败");
@@ -94,23 +108,16 @@
 - (void)clickLogoutButtonAction:(UIButton *)sender {
     __weak typeof(self) weakSelf = self;
     [[MESDKHandler shareHandler] logoutWithCompletion:^(NSString * _Nonnull statusCode) {
-        weakSelf.avatar_imgview.image = nil;
-        weakSelf.userid_label.text = @"";
-        weakSelf.username_label.text = @"";
-        weakSelf.realname_label.text = @"";
         if ([statusCode isEqualToString:SDKCodeLogoutSuccess]) {
+            weakSelf.avatar_imgview.image = nil;
+            weakSelf.userid_label.text = @"";
+            weakSelf.username_label.text = @"";
+            weakSelf.realname_label.text = @"";
             NSLog(@"退出登录成功");
         } else {
             NSLog(@"退出登录失败");
         }
     }];
-//    [[MESDKHandler shareHandler] exitSDKWithCompltion:^(NSString * _Nonnull statusCode, NSString * _Nullable infoStr) {
-//        if ([statusCode isEqualToString:SDKCodeSuccess]) {
-//            NSLog(@"退出成功");
-//        } else {
-//            NSLog(@"退出失败");
-//        }
-//    }];
 }
 - (void)clickProtocolButtonAction:(UIButton *)sender {
     [[MESDKHandler shareHandler] showProtocolViewWithViewController:self completion:^(NSString * _Nonnull statusCode) {
@@ -139,6 +146,48 @@
             NSLog(@"用户取消");
         } else {
             NSLog(@"发生错误");
+        }
+    }];
+}
+- (void)clickExitButtonAction:(UIButton *)sender {
+    [[MESDKHandler shareHandler] exitSDKWithViewController:self WithCompltion:^(NSString * _Nullable infoStr, NSString * _Nonnull statusCode) {
+        if ([statusCode isEqualToString:SDKCodeSuccess]) {
+            NSLog(@"退出成功");
+            exit(0);
+        } else if ([statusCode isEqualToString:SDKCodeUserCancel]) {
+            NSLog(@"用户取消");
+        } else {
+            NSLog(@"%@", infoStr);
+        }
+    }];
+}
+- (void)clickRoleButtonAction:(UIButton *)sender {
+    __weak typeof(self) weakSelf = self;
+    [[MESDKHandler shareHandler] createRoleWithRoleName:@"怪兽" roleID:@"222" serverName:@"猫耳1区" completion:^(NSDictionary * _Nullable infoDic, NSString * _Nonnull statusCode) {
+        if ([statusCode isEqualToString:SDKCodeSuccess]) {
+            NSLog(@"%@", infoDic);
+            weakSelf.requestinfo_label.text = [NSString stringWithFormat:@"%@", infoDic];
+        } else if ([statusCode isEqualToString:SDKCodeParametersIllegal]) {
+            NSLog(@"参数错误");
+            weakSelf.requestinfo_label.text = @"";
+        } else {
+            NSLog(@"发生错误");
+            weakSelf.requestinfo_label.text = @"";
+        }
+    }];
+}
+- (void)clickNotifyButtonAction:(UIButton *)sender {
+    __weak typeof(self) weakSelf = self;
+    [[MESDKHandler shareHandler] notifyZoneWithRoleName:@"怪兽" roldID:@"222" serverName:@"猫耳1区" completion:^(NSDictionary * _Nullable infoDic, NSString * _Nonnull statusCode) {
+        if ([statusCode isEqualToString:SDKCodeSuccess]) {
+            NSLog(@"%@", infoDic);
+            weakSelf.requestinfo_label.text = [NSString stringWithFormat:@"%@", infoDic];
+        } else if ([statusCode isEqualToString:SDKCodeParametersIllegal]) {
+            NSLog(@"参数错误");
+            weakSelf.requestinfo_label.text = @"";
+        } else {
+            NSLog(@"发生错误");
+            weakSelf.requestinfo_label.text = @"";
         }
     }];
 }
@@ -238,6 +287,57 @@
         [_realname_button addTarget:self action:@selector(clickRealNameButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _realname_button;
+}
+- (UIButton *)exit_button {
+    if (!_exit_button) {
+        _exit_button = [[UIButton alloc] initWithFrame:CGRectMake(30 + (([UIScreen mainScreen].bounds.size.width - 60) / 3.f), 260, ([UIScreen mainScreen].bounds.size.width - 60) / 3.f, 40)];
+        [_exit_button setTitle:@"退出游戏" forState:UIControlStateNormal];
+        [_exit_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        _exit_button.layer.cornerRadius = 5.f;
+        _exit_button.layer.masksToBounds = YES;
+        _exit_button.layer.borderWidth = .5f;
+        _exit_button.layer.borderColor = [UIColor blackColor].CGColor;
+        
+        [_exit_button addTarget:self action:@selector(clickExitButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _exit_button;
+}
+- (UIButton *)role_button {
+    if (!_role_button) {
+        _role_button = [[UIButton alloc] initWithFrame:CGRectMake(15, 320, ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 40)];
+        [_role_button setTitle:@"创建角色" forState:UIControlStateNormal];
+        [_role_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        _role_button.layer.cornerRadius = 5.f;
+        _role_button.layer.masksToBounds = YES;
+        _role_button.layer.borderWidth = .5f;
+        _role_button.layer.borderColor = [UIColor blackColor].CGColor;
+        
+        [_role_button addTarget:self action:@selector(clickRoleButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _role_button;
+}
+- (UIButton *)notify_button {
+    if (!_notify_button) {
+        _notify_button = [[UIButton alloc] initWithFrame:CGRectMake(15, 370, ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 40)];
+        [_notify_button setTitle:@"通知区服" forState:UIControlStateNormal];
+        [_notify_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        _notify_button.layer.cornerRadius = 5.f;
+        _notify_button.layer.masksToBounds = YES;
+        _notify_button.layer.borderWidth = .5f;
+        _notify_button.layer.borderColor = [UIColor blackColor].CGColor;
+        
+        [_notify_button addTarget:self action:@selector(clickNotifyButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    return _notify_button;
+}
+- (UILabel *)requestinfo_label {
+    if (!_requestinfo_label) {
+        _requestinfo_label = [[UILabel alloc] initWithFrame:CGRectMake(15, 420, [UIScreen mainScreen].bounds.size.width - 30, ([UIScreen mainScreen].bounds.size.height - 420) > 0 ? ([UIScreen mainScreen].bounds.size.height - 420) : 200)];
+        _requestinfo_label.textColor = [UIColor blackColor];
+        _requestinfo_label.font = [UIFont systemFontOfSize:11.f];
+        _requestinfo_label.numberOfLines = 0;
+    }
+    return _requestinfo_label;
 }
 
 
