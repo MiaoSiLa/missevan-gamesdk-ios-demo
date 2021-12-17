@@ -37,6 +37,7 @@
             }
         }
     }];
+    [[MESDKHandler shareHandler] setOrientationType:MESDKOrientationAuto];
     
     return YES;
 }

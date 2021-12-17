@@ -61,10 +61,10 @@
 }
 
 #pragma mark - Button Action
-- (void)clickLoginButtonAction:(UIButton *)sender {
+- (void)clickLoginButtonAction {
     __weak typeof(self) weakSelf = self;
-    [[MESDKHandler shareHandler] showLoginWithViewController:self completion:^(NSDictionary * _Nonnull user, NSString * _Nonnull statusCode) {
-        if ([statusCode isEqualToString:SDKCodeLoginSuccess]) {
+    [[MESDKHandler shareHandler] loginActionWithViewController:self completion:^(NSDictionary * _Nonnull user, NSString * _Nonnull statusCode) {
+        if ([statusCode isEqualToString:SDKCodeLoginSuccess] || [statusCode isEqualToString:SDKCodeTokenLoginSuccess]) {
             NSLog(@"登录成功: %@", user);
             weakSelf.userid_label.text = [NSString stringWithFormat:@"ID: %@", user[@"uid"]];
             weakSelf.username_label.text = [NSString stringWithFormat:@"Name: %@", user[@"username"]];
@@ -75,7 +75,7 @@
             [[MESDKHandler shareHandler] showUserInfoBannerWithViewController:weakSelf Avatar:user[@"avatar"] Name:user[@"username"] completion:^(NSString * _Nonnull statusCode) {
                 if ([statusCode isEqualToString:SDKCodeChangeUser]) {
                     NSLog(@"更换用户");
-                    [weakSelf clickLogoutButtonAction:nil];
+                    [weakSelf clickChangeButtonAction];
                 }
             }];
             
@@ -86,28 +86,38 @@
                         NSLog(@"认证成功");
                     } else if ([statusCode isEqualToString:SDKCodeUserCancel]) {
                         NSLog(@"用户取消");
+//                        [weakSelf clickLogoutButtonAction];
                     } else {
                         NSLog(@"发生错误");
                     }
                 }];
             }
-            
-            //Get UserInfo
-            [[MESDKHandler shareHandler] getUserInfoCompletion:^(NSDictionary * _Nonnull user_info, NSString * _Nonnull statusCode) {
-                if ([statusCode isEqual:SDKCodeSuccess]) {
-                    NSLog(@"UserInfo: %@", user_info);
-                } else {
-                    NSLog(@"发生错误");
-                }
-            }];
+        } else if ([statusCode isEqualToString:SDKCodeExpiredToken]) {
+            NSLog(@"token过期");
+            [weakSelf clickLoginButtonAction];
         } else {
             NSLog(@"登录失败");
         }
     }];
 }
-- (void)clickLogoutButtonAction:(UIButton *)sender {
+- (void)clickChangeButtonAction {
     __weak typeof(self) weakSelf = self;
-    [[MESDKHandler shareHandler] logoutWithCompletion:^(NSString * _Nonnull statusCode) {
+    [[MESDKHandler shareHandler] logoutActionWithCompletion:^(NSString * _Nonnull statusCode) {
+        if ([statusCode isEqualToString:SDKCodeLogoutSuccess]) {
+            weakSelf.avatar_imgview.image = nil;
+            weakSelf.userid_label.text = @"";
+            weakSelf.username_label.text = @"";
+            weakSelf.realname_label.text = @"";
+            NSLog(@"退出登录成功");
+            [weakSelf clickLoginButtonAction];
+        } else {
+            NSLog(@"退出登录失败");
+        }
+    }];
+}
+- (void)clickLogoutButtonAction {
+    __weak typeof(self) weakSelf = self;
+    [[MESDKHandler shareHandler] logoutActionWithCompletion:^(NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeLogoutSuccess]) {
             weakSelf.avatar_imgview.image = nil;
             weakSelf.userid_label.text = @"";
@@ -119,7 +129,7 @@
         }
     }];
 }
-- (void)clickProtocolButtonAction:(UIButton *)sender {
+- (void)clickProtocolButtonAction {
     [[MESDKHandler shareHandler] showProtocolViewWithViewController:self completion:^(NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeProtocolConfirm]) {
             NSLog(@"确认协议");
@@ -138,18 +148,20 @@
         }
     }];
 }
-- (void)clickRealNameButtonAction:(UIButton *)sender {
+- (void)clickRealNameButtonAction {
+    __weak typeof(self) weakSelf = self;
     [[MESDKHandler shareHandler] showRealNameCertificateViewWithViewController:self completion:^(NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeCertificateSuccess]) {
             NSLog(@"认证成功");
         } else if ([statusCode isEqualToString:SDKCodeUserCancel]) {
             NSLog(@"用户取消");
+            [weakSelf clickLogoutButtonAction];
         } else {
             NSLog(@"发生错误");
         }
     }];
 }
-- (void)clickExitButtonAction:(UIButton *)sender {
+- (void)clickExitButtonAction {
     [[MESDKHandler shareHandler] exitSDKWithViewController:self WithCompltion:^(NSString * _Nullable infoStr, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeSuccess]) {
             NSLog(@"退出成功");
@@ -161,7 +173,7 @@
         }
     }];
 }
-- (void)clickRoleButtonAction:(UIButton *)sender {
+- (void)clickRoleButtonAction {
     __weak typeof(self) weakSelf = self;
     [[MESDKHandler shareHandler] createRoleWithRoleName:@"怪兽" roleID:@"222" serverName:@"猫耳1区" completion:^(NSDictionary * _Nullable infoDic, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeSuccess]) {
@@ -176,7 +188,7 @@
         }
     }];
 }
-- (void)clickNotifyButtonAction:(UIButton *)sender {
+- (void)clickNotifyButtonAction {
     __weak typeof(self) weakSelf = self;
     [[MESDKHandler shareHandler] notifyZoneWithRoleName:@"怪兽" roldID:@"222" serverName:@"猫耳1区" completion:^(NSDictionary * _Nullable infoDic, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeSuccess]) {
@@ -203,7 +215,7 @@
         _login_button.layer.borderWidth = .5f;
         _login_button.layer.borderColor = [UIColor blackColor].CGColor;
         
-        [_login_button addTarget:self action:@selector(clickLoginButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [_login_button addTarget:self action:@selector(clickLoginButtonAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _login_button;
 }
@@ -217,7 +229,7 @@
         _protocol_button.layer.borderWidth = .5f;
         _protocol_button.layer.borderColor = [UIColor blackColor].CGColor;
         
-        [_protocol_button addTarget:self action:@selector(clickProtocolButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [_protocol_button addTarget:self action:@selector(clickProtocolButtonAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _protocol_button;
 }
@@ -231,7 +243,7 @@
         _logout_button.layer.borderWidth = .5f;
         _logout_button.layer.borderColor = [UIColor blackColor].CGColor;
         
-        [_logout_button addTarget:self action:@selector(clickLogoutButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [_logout_button addTarget:self action:@selector(clickLogoutButtonAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _logout_button;
 }
@@ -284,7 +296,7 @@
         _realname_button.layer.borderWidth = .5f;
         _realname_button.layer.borderColor = [UIColor blackColor].CGColor;
         
-        [_realname_button addTarget:self action:@selector(clickRealNameButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [_realname_button addTarget:self action:@selector(clickRealNameButtonAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _realname_button;
 }
@@ -298,7 +310,7 @@
         _exit_button.layer.borderWidth = .5f;
         _exit_button.layer.borderColor = [UIColor blackColor].CGColor;
         
-        [_exit_button addTarget:self action:@selector(clickExitButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [_exit_button addTarget:self action:@selector(clickExitButtonAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _exit_button;
 }
@@ -312,7 +324,7 @@
         _role_button.layer.borderWidth = .5f;
         _role_button.layer.borderColor = [UIColor blackColor].CGColor;
         
-        [_role_button addTarget:self action:@selector(clickRoleButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [_role_button addTarget:self action:@selector(clickRoleButtonAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _role_button;
 }
@@ -326,7 +338,7 @@
         _notify_button.layer.borderWidth = .5f;
         _notify_button.layer.borderColor = [UIColor blackColor].CGColor;
         
-        [_notify_button addTarget:self action:@selector(clickNotifyButtonAction:) forControlEvents:UIControlEventTouchUpInside];
+        [_notify_button addTarget:self action:@selector(clickNotifyButtonAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _notify_button;
 }
