@@ -10,6 +10,9 @@
 #import <MESDK/MESDK.h>
 #import "UIImageView+WebCache.h"
 
+#import "AppDelegate.h"
+#import "SceneDelegate.h"
+
 @interface ViewController ()
 
 
@@ -28,7 +31,10 @@
 @property (nonatomic, strong) UIButton *role_button;
 @property (nonatomic, strong) UIButton *notify_button;
 
-@property (nonatomic, strong) UILabel *requestinfo_label;
+@property (nonatomic, strong) UILabel *api_label;
+@property (nonatomic, strong) UISwitch *api_switch;
+@property (nonatomic, strong) UILabel *teencheck_label;
+@property (nonatomic, strong) UISwitch *teencheck_switch;
 
 @end
 
@@ -57,44 +63,55 @@
     [self.view addSubview:self.exit_button];
     [self.view addSubview:self.role_button];
     [self.view addSubview:self.notify_button];
-    [self.view addSubview:self.requestinfo_label];
+    [self.view addSubview:self.teencheck_label];
+    [self.view addSubview:self.teencheck_switch];
+    
 }
 
 #pragma mark - Button Action
 - (void)clickLoginButtonAction {
     __weak typeof(self) weakSelf = self;
-    [[MESDKHandler shareHandler] loginActionWithViewController:self completion:^(NSDictionary * _Nonnull user, NSString * _Nonnull statusCode) {
+    [[MESDKHandler shareHandler] loginActionWithViewController:self completion:^(id _Nullable returnValue, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeLoginSuccess] || [statusCode isEqualToString:SDKCodeTokenLoginSuccess]) {
-            NSLog(@"登录成功: %@", user);
-            weakSelf.userid_label.text = [NSString stringWithFormat:@"ID: %@", user[@"uid"]];
-            weakSelf.username_label.text = [NSString stringWithFormat:@"Name: %@", user[@"username"]];
-            weakSelf.realname_label.text = [user[@"realname_verified"] boolValue] ? @"RealName: YES" : @"RealName: NO";
-            [weakSelf.avatar_imgview sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", user[@"avatar"]]]];
-            
-            //Show Banner
-            [[MESDKHandler shareHandler] showUserInfoBannerWithViewController:weakSelf Avatar:user[@"avatar"] Name:user[@"username"] completion:^(NSString * _Nonnull statusCode) {
-                if ([statusCode isEqualToString:SDKCodeChangeUser]) {
-                    NSLog(@"更换用户");
-                    [weakSelf clickChangeButtonAction];
-                }
-            }];
-            
-            if (![user[@"realname_verified"] boolValue]) {
-                //Show Realname
-                [[MESDKHandler shareHandler] showRealNameCertificateViewWithViewController:weakSelf completion:^(NSString * _Nonnull statusCode) {
-                    if ([statusCode isEqualToString:SDKCodeCertificateSuccess]) {
-                        NSLog(@"认证成功");
-                    } else if ([statusCode isEqualToString:SDKCodeUserCancel]) {
-                        NSLog(@"用户取消");
-//                        [weakSelf clickLogoutButtonAction];
-                    } else {
-                        NSLog(@"发生错误");
+            if ([returnValue isKindOfClass:[NSDictionary class]]) {
+                NSDictionary *user = returnValue;
+                NSLog(@"登录成功: %@", user);
+                weakSelf.userid_label.text = [NSString stringWithFormat:@"ID: %@", user[@"uid"]];
+                weakSelf.username_label.text = [NSString stringWithFormat:@"Name: %@", user[@"username"]];
+                weakSelf.realname_label.text = [user[@"realname_verified"] boolValue] ? @"RealName: YES" : @"RealName: NO";
+                [weakSelf.avatar_imgview sd_setImageWithURL:[NSURL URLWithString:[NSString stringWithFormat:@"%@", user[@"avatar"]]]];
+                
+                //Show Banner
+                [[MESDKHandler shareHandler] showUserInfoBannerWithViewController:weakSelf Avatar:user[@"avatar"] Name:user[@"username"] completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
+                    if ([statusCode isEqualToString:SDKCodeChangeUser]) {
+                        NSLog(@"更换用户");
+                        [weakSelf clickChangeButtonAction];
                     }
                 }];
+                
+                if (![user[@"realname_verified"] boolValue]) {
+                    //Show Realname
+                    [[MESDKHandler shareHandler] showRealNameCertificateViewWithViewController:weakSelf completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
+                        if ([statusCode isEqualToString:SDKCodeCertificateSuccess]) {
+                            NSLog(@"认证成功");
+                        } else if ([statusCode isEqualToString:SDKCodeUserCancel]) {
+                            NSLog(@"用户取消");
+    //                        [weakSelf clickLogoutButtonAction];
+                        } else {
+                            NSLog(@"发生错误");
+                        }
+                    }];
+                }
             }
-        } else if ([statusCode isEqualToString:SDKCodeExpiredToken]) {
-            NSLog(@"token过期");
-            [weakSelf clickLoginButtonAction];
+        } else if ([statusCode isEqualToString:SDKCodeTeenCheckAlert]) {
+            [[MESDKHandler shareHandler] showTeenagerAlertWithViewController:weakSelf andAlertInfo:returnValue completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
+                if ([statusCode isEqualToString:SDKCodeTeenAlertExit]) {
+                    NSLog(@"需要强制退出");
+                    exit(0);
+                } else {
+                    NSLog(@"不需要强制退出");
+                }
+            }];
         } else {
             NSLog(@"登录失败");
         }
@@ -102,7 +119,7 @@
 }
 - (void)clickChangeButtonAction {
     __weak typeof(self) weakSelf = self;
-    [[MESDKHandler shareHandler] logoutActionWithCompletion:^(NSString * _Nonnull statusCode) {
+    [[MESDKHandler shareHandler] logoutActionWithCompletion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeLogoutSuccess]) {
             weakSelf.avatar_imgview.image = nil;
             weakSelf.userid_label.text = @"";
@@ -117,7 +134,7 @@
 }
 - (void)clickLogoutButtonAction {
     __weak typeof(self) weakSelf = self;
-    [[MESDKHandler shareHandler] logoutActionWithCompletion:^(NSString * _Nonnull statusCode) {
+    [[MESDKHandler shareHandler] logoutActionWithCompletion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeLogoutSuccess]) {
             weakSelf.avatar_imgview.image = nil;
             weakSelf.userid_label.text = @"";
@@ -130,11 +147,11 @@
     }];
 }
 - (void)clickProtocolButtonAction {
-    [[MESDKHandler shareHandler] showProtocolViewWithViewController:self completion:^(NSString * _Nonnull statusCode) {
+    [[MESDKHandler shareHandler] showProtocolViewWithViewController:self completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeProtocolConfirm]) {
             NSLog(@"确认协议");
             [[MESDKHandler shareHandler] hideProtocolView];
-            [[MESDKHandler shareHandler] userAcceptProtocolWithCompletion:^(NSString * _Nonnull statusCode) {
+            [[MESDKHandler shareHandler] userAcceptProtocolWithCompletion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
                 
             }];
         } else if ([statusCode isEqualToString:SDKCodeProtocolReject]) {
@@ -150,7 +167,7 @@
 }
 - (void)clickRealNameButtonAction {
     __weak typeof(self) weakSelf = self;
-    [[MESDKHandler shareHandler] showRealNameCertificateViewWithViewController:self completion:^(NSString * _Nonnull statusCode) {
+    [[MESDKHandler shareHandler] showRealNameCertificateViewWithViewController:self completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeCertificateSuccess]) {
             NSLog(@"认证成功");
         } else if ([statusCode isEqualToString:SDKCodeUserCancel]) {
@@ -174,34 +191,64 @@
     }];
 }
 - (void)clickRoleButtonAction {
-    __weak typeof(self) weakSelf = self;
     [[MESDKHandler shareHandler] createRoleWithRoleName:@"怪兽" roleID:@"222" serverName:@"猫耳1区" completion:^(NSDictionary * _Nullable infoDic, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeSuccess]) {
             NSLog(@"%@", infoDic);
-            weakSelf.requestinfo_label.text = [NSString stringWithFormat:@"%@", infoDic];
         } else if ([statusCode isEqualToString:SDKCodeParametersIllegal]) {
             NSLog(@"参数错误");
-            weakSelf.requestinfo_label.text = @"";
+
         } else {
             NSLog(@"发生错误");
-            weakSelf.requestinfo_label.text = @"";
         }
     }];
 }
 - (void)clickNotifyButtonAction {
-    __weak typeof(self) weakSelf = self;
     [[MESDKHandler shareHandler] notifyZoneWithRoleName:@"怪兽" roldID:@"222" serverName:@"猫耳1区" completion:^(NSDictionary * _Nullable infoDic, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeSuccess]) {
             NSLog(@"%@", infoDic);
-            weakSelf.requestinfo_label.text = [NSString stringWithFormat:@"%@", infoDic];
         } else if ([statusCode isEqualToString:SDKCodeParametersIllegal]) {
             NSLog(@"参数错误");
-            weakSelf.requestinfo_label.text = @"";
         } else {
             NSLog(@"发生错误");
-            weakSelf.requestinfo_label.text = @"";
         }
     }];
+}
+- (void)switchAction:(UISwitch *)sender {
+    if (sender.isOn) {
+        __weak typeof(self) weakSelf = self;
+        [[MESDKHandler shareHandler] checkTeenagerListenerWithCompletion:^(NSDictionary * _Nonnull alertInfo, NSString * _Nonnull statusCode) {
+            if ([statusCode isEqualToString:SDKCodeTeenCheckAlert]) {
+                [[MESDKHandler shareHandler] showTeenagerAlertWithViewController:weakSelf andAlertInfo:alertInfo completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
+                    if ([statusCode isEqualToString:SDKCodeTeenAlertExit]) {
+                        NSLog(@"需要强制退出");
+                    } else {
+                        NSLog(@"不需要强制退出");
+                    }
+                }];
+            } else if ([statusCode isEqualToString:SDKCodeTeenCheckSuccess]) {
+                NSMutableDictionary *mDic = [NSMutableDictionary dictionary];
+                [mDic setObject:@(false) forKey:@"open_login"];
+                [mDic setObject:@(true) forKey:@"has_notice"];
+                [mDic setObject:@"3" forKey:@"notice_type"];
+                [mDic setObject:@"防沉迷提示" forKey:@"title"];
+                [mDic setObject:@"根据相关政策，未成年玩家在本时段无法登录游戏哦～" forKey:@"content"];
+                [mDic setObject:@[@{@"msg": @"<a href='missevan-game://return'>我知道了</a>"}] forKey:@"buttons"];
+                [[MESDKHandler shareHandler] showTeenagerAlertWithViewController:weakSelf andAlertInfo:mDic completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
+                    if ([statusCode isEqualToString:SDKCodeTeenAlertExit]) {
+                        NSLog(@"需要强制退出");
+                        exit(0);
+                    } else {
+                        NSLog(@"不需要强制退出");
+                    }
+                }];
+                NSLog(@"正常");
+            } else {
+                NSLog(@"发生错误");
+            }
+        }];
+    } else {
+        [[MESDKHandler shareHandler] stopTeenagerListener];
+    }
 }
 
 #pragma mark - Get/Set
@@ -342,14 +389,22 @@
     }
     return _notify_button;
 }
-- (UILabel *)requestinfo_label {
-    if (!_requestinfo_label) {
-        _requestinfo_label = [[UILabel alloc] initWithFrame:CGRectMake(15, 420, [UIScreen mainScreen].bounds.size.width - 30, ([UIScreen mainScreen].bounds.size.height - 420) > 0 ? ([UIScreen mainScreen].bounds.size.height - 420) : 200)];
-        _requestinfo_label.textColor = [UIColor blackColor];
-        _requestinfo_label.font = [UIFont systemFontOfSize:11.f];
-        _requestinfo_label.numberOfLines = 0;
+- (UILabel *)teencheck_label {
+    if (!_teencheck_label) {
+        _teencheck_label = [[UILabel alloc] initWithFrame:CGRectMake(25 + ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 320, 80, 40)];
+        _teencheck_label.text = @"防沉迷轮询：";
+        _teencheck_label.textColor = [UIColor blackColor];
+        _teencheck_label.font = [UIFont systemFontOfSize:13.f];
     }
-    return _requestinfo_label;
+    return _teencheck_label;
+}
+- (UISwitch *)teencheck_switch {
+    if (!_teencheck_switch) {
+        _teencheck_switch = [[UISwitch alloc] initWithFrame:CGRectMake(105 + ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 320, 50, 40)];
+        [_teencheck_switch setOn:NO];
+        [_teencheck_switch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+    }
+    return _teencheck_switch;
 }
 
 

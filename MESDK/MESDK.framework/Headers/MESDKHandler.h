@@ -8,13 +8,15 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSUInteger, MESDKOrientationType) {
-    MESDKOrientationAuto,
     MESDKOrientationPortrait,
     MESDKOrientationLandscape,
+    MESDKOrientationAuto,
 };
 
-NS_ASSUME_NONNULL_BEGIN
+typedef void (^SDKResponseBlock)(id _Nullable returnValue, NSString *statusCode);
 
 @interface MESDKHandler : NSObject
 
@@ -40,23 +42,27 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (instancetype)shareHandler;
 + (NSString *)SDKVersion;
+
+// Config - 设置方向
 - (void)setOrientationType:(MESDKOrientationType)oType;
+// Config - 设置防沉迷轮询间隔时长，默认60秒
+- (void)setTeenagerListenerDuration:(NSTimeInterval)duration;
 
 // 初始化SDK
-- (void)launchSDKWithAppID:(NSString *)app_id AppKey:(NSString *)app_key ServerID:(NSString *)server_id MerchantID:(NSString *)merchant_id Completion:(void (^)(NSString * _Nullable infoStr, NSString *statusCode))completion;
+- (void)launchSDKWithAppID:(NSString *)app_id AppKey:(NSString *)app_key ServerID:(NSString *)server_id MerchantID:(NSString *)merchant_id Completion:(SDKResponseBlock)completion;
 // 获取 Config
-- (void)getConfigWithCompletion:(void (^)(NSDictionary * _Nullable infoDic, NSString *statusCode))completion;
+- (void)getConfigWithCompletion:(SDKResponseBlock)completion;
 // 退出SDK
-- (void)exitSDKWithViewController:(UIViewController *)viewController WithCompltion:(void (^)(NSString * _Nullable infoStr, NSString *statusCode))completion;
+- (void)exitSDKWithViewController:(UIViewController *)viewController WithCompltion:(SDKResponseBlock)completion;
 
 
 
 // 显示协议弹窗
-- (void)showProtocolViewWithViewController:(UIViewController *)viewController completion:(void (^)(NSString *statusCode))completion;
+- (void)showProtocolViewWithViewController:(UIViewController *)viewController completion:(SDKResponseBlock)completion;
 // 隐藏协议弹窗
 - (void)hideProtocolView;
 // 用户接受协议
-- (void)userAcceptProtocolWithCompletion:(void (^)(NSString *statusCode))completion;
+- (void)userAcceptProtocolWithCompletion:(SDKResponseBlock)completion;
 
 
 
@@ -65,21 +71,26 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  statucCode = [SDKCodeLoginSuccess|SDKCodeTokenLoginSuccess|SDKCodeExpiredToken|SDKCodeUserCancel]
  */
-- (void)loginActionWithViewController:(UIViewController *)viewController completion:(void (^)(NSDictionary *user, NSString *statusCode))completion;
+- (void)loginActionWithViewController:(UIViewController *)viewController completion:(SDKResponseBlock)completion;
 // 登出
-- (void)logoutActionWithCompletion:(void (^)(NSString *statusCode))completion;
+- (void)logoutActionWithCompletion:(SDKResponseBlock)completion;
 // 显示登录信息Banner
-- (void)showUserInfoBannerWithViewController:(UIViewController *)viewController Avatar:(NSString *)aURL Name:(NSString *)uName completion:(void (^)(NSString *statusCode))completion;
+- (void)showUserInfoBannerWithViewController:(UIViewController *)viewController Avatar:(NSString *)aURL Name:(NSString *)uName completion:(SDKResponseBlock)completion;
 
 
 
 // 创建角色
-- (void)createRoleWithRoleName:(NSString *)role_name roleID:(NSString *)role_id serverName:(NSString *)server_name completion:(void (^)(NSDictionary * _Nullable infoDic, NSString *statusCode))completion;
+- (void)createRoleWithRoleName:(NSString *)role_name roleID:(NSString *)role_id serverName:(NSString *)server_name completion:(SDKResponseBlock)completion;
 // 通知区服
-- (void)notifyZoneWithRoleName:(NSString *)role_name roldID:(NSString *)role_id serverName:(NSString *)server_name completion:(void (^)(NSDictionary * _Nullable infoDic, NSString *statusCode))completion;
+- (void)notifyZoneWithRoleName:(NSString *)role_name roldID:(NSString *)role_id serverName:(NSString *)server_name completion:(SDKResponseBlock)completion;
 
 // 显示实名认证弹窗
-- (void)showRealNameCertificateViewWithViewController:(UIViewController *)viewController completion:(void (^)(NSString *statusCode))completion;
+- (void)showRealNameCertificateViewWithViewController:(UIViewController *)viewController completion:(SDKResponseBlock)completion;
+
+// 显示防沉迷弹窗
+- (void)showTeenagerAlertWithViewController:(UIViewController *)viewController andAlertInfo:(NSDictionary *)alertInfo completion:(SDKResponseBlock)completion;
+- (void)checkTeenagerListenerWithCompletion:(SDKResponseBlock)completion;
+- (void)stopTeenagerListener;
 
 @end
 

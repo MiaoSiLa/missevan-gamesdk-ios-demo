@@ -28,6 +28,12 @@ static NSString * const SDKCodeLogoutFailed =           @"300201";
 static NSString * const SDKCodeCertificateSuccess =     @"300300";
 static NSString * const SDKCodeChangeUser =             @"300400";
 
+static NSString * const SDKCodeTeenCheckSuccess =       @"400000";
+static NSString * const SDKCodeTeenCheckAlert =         @"400001";
+static NSString * const SDKCodeTeenCheckError =         @"400002";
+static NSString * const SDKCodeTeenAlertCancel =        @"400100";
+static NSString * const SDKCodeTeenAlertExit =          @"400101";
+
 // 未知失败
 static NSString * const SDKCodeUnknownError =           @"900000";
 // 服务器失败
