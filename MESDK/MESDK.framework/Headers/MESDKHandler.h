@@ -91,7 +91,7 @@ typedef void (^SDKResponseBlock)(id _Nullable returnValue, NSString *statusCode)
 - (void)showRealNameCertificateViewWithViewController:(UIViewController *)viewController completion:(SDKResponseBlock)completion;
 
 // 显示防沉迷弹窗
-- (void)showTeenagerAlertWithViewController:(UIViewController *)viewController andAlertInfo:(NSDictionary *)alertInfo completion:(SDKResponseBlock)completion;
+- (void)showTeenagerAlertWithViewController:(UIViewController *)viewController andAlertInfo:(id)alertObj completion:(SDKResponseBlock)completion;
 - (void)checkTeenagerListenerWithCompletion:(SDKResponseBlock)completion;
 - (void)stopTeenagerListener;
 

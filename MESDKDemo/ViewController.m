@@ -98,7 +98,7 @@
                             NSLog(@"认证成功");
                         } else if ([statusCode isEqualToString:SDKCodeUserCancel]) {
                             NSLog(@"用户取消");
-    //                        [weakSelf clickLogoutButtonAction];
+                            [weakSelf clickLogoutButtonAction];
                         } else {
                             NSLog(@"发生错误");
                         }
@@ -226,21 +226,6 @@
                         }
                     }];
                 } else if ([statusCode isEqualToString:SDKCodeTeenCheckSuccess]) {
-                    NSMutableDictionary *mDic = [NSMutableDictionary dictionary];
-                    [mDic setObject:@(false) forKey:@"open_login"];
-                    [mDic setObject:@(true) forKey:@"has_notice"];
-                    [mDic setObject:@"3" forKey:@"notice_type"];
-                    [mDic setObject:@"防沉迷提示" forKey:@"title"];
-                    [mDic setObject:@"根据相关政策，未成年玩家在本时段无法登录游戏哦～" forKey:@"content"];
-                    [mDic setObject:@[@{@"msg": @"<a href='missevan-game://return'>我知道了</a>"}] forKey:@"buttons"];
-                    [[MESDKHandler shareHandler] showTeenagerAlertWithViewController:weakSelf andAlertInfo:mDic completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
-                        if ([statusCode isEqualToString:SDKCodeTeenAlertExit]) {
-                            NSLog(@"需要强制退出");
-                            exit(0);
-                        } else {
-                            NSLog(@"不需要强制退出");
-                        }
-                    }];
                     NSLog(@"正常");
                 } else {
                     NSLog(@"发生错误");
