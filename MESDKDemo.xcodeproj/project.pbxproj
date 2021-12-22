@@ -34,7 +34,7 @@
 		8DA5CD38273B730C0028ACF3 /* MESDKDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5CD37273B730C0028ACF3 /* MESDKDemoTests.m */; };
 		8DA5CD43273B730C0028ACF3 /* MESDKDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5CD42273B730C0028ACF3 /* MESDKDemoUITests.m */; };
 		8DA5CDF7273B87A00028ACF3 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA5CDF6273B87890028ACF3 /* libc++.tbd */; };
-		8DC6FEFE2771E0E600DE1C42 /* MESDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC6FEFD2771E0E600DE1C42 /* MESDK.framework */; };
+		8DC6FF182772E7D000DE1C42 /* MESDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC6FF172772E7D000DE1C42 /* MESDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -108,7 +108,7 @@
 		8DA5CD42273B730C0028ACF3 /* MESDKDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MESDKDemoUITests.m; sourceTree = "<group>"; };
 		8DA5CD44273B730C0028ACF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DA5CDF6273B87890028ACF3 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
-		8DC6FEFD2771E0E600DE1C42 /* MESDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MESDK.framework; sourceTree = "<group>"; };
+		8DC6FF172772E7D000DE1C42 /* MESDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MESDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,7 +117,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DA5CDF7273B87A00028ACF3 /* libc++.tbd in Frameworks */,
-				8DC6FEFE2771E0E600DE1C42 /* MESDK.framework in Frameworks */,
+				8DC6FF182772E7D000DE1C42 /* MESDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,7 +239,7 @@
 		8DA5CDF0273B86430028ACF3 /* MESDK */ = {
 			isa = PBXGroup;
 			children = (
-				8DC6FEFD2771E0E600DE1C42 /* MESDK.framework */,
+				8DC6FF172772E7D000DE1C42 /* MESDK.framework */,
 				8DA295F8275DF93C00A29AA1 /* MESDKResource.bundle */,
 			);
 			path = MESDK;

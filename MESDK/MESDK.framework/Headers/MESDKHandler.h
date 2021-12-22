@@ -47,6 +47,9 @@ typedef void (^SDKResponseBlock)(id _Nullable returnValue, NSString *statusCode)
 - (void)setOrientationType:(MESDKOrientationType)oType;
 // Config - 设置防沉迷轮询间隔时长，默认60秒
 - (void)setTeenagerListenerDuration:(NSTimeInterval)duration;
+// Config - 设置API模式
+- (void)setAPIMode:(BOOL)apiMode;
+- (BOOL)getAPIMode;
 
 // 初始化SDK
 - (void)launchSDKWithAppID:(NSString *)app_id AppKey:(NSString *)app_key ServerID:(NSString *)server_id MerchantID:(NSString *)merchant_id Completion:(SDKResponseBlock)completion;
@@ -62,7 +65,7 @@ typedef void (^SDKResponseBlock)(id _Nullable returnValue, NSString *statusCode)
 // 隐藏协议弹窗
 - (void)hideProtocolView;
 // 用户接受协议
-- (void)userAcceptProtocolWithCompletion:(SDKResponseBlock)completion;
+//- (void)userAcceptProtocolWithCompletion:(SDKResponseBlock)completion;
 
 
 

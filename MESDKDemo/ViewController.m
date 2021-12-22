@@ -46,6 +46,7 @@
     
     [self createView];
     
+    [self clickProtocolButtonAction];
 }
 
 #pragma mark - CreateView
@@ -65,7 +66,8 @@
     [self.view addSubview:self.notify_button];
     [self.view addSubview:self.teencheck_label];
     [self.view addSubview:self.teencheck_switch];
-    
+    [self.view addSubview:self.api_label];
+    [self.view addSubview:self.api_switch];
 }
 
 #pragma mark - Button Action
@@ -151,9 +153,6 @@
         if ([statusCode isEqualToString:SDKCodeProtocolConfirm]) {
             NSLog(@"确认协议");
             [[MESDKHandler shareHandler] hideProtocolView];
-            [[MESDKHandler shareHandler] userAcceptProtocolWithCompletion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
-                
-            }];
         } else if ([statusCode isEqualToString:SDKCodeProtocolReject]) {
             NSLog(@"拒绝协议");
             exit(0);
@@ -214,40 +213,51 @@
     }];
 }
 - (void)switchAction:(UISwitch *)sender {
-    if (sender.isOn) {
-        __weak typeof(self) weakSelf = self;
-        [[MESDKHandler shareHandler] checkTeenagerListenerWithCompletion:^(NSDictionary * _Nonnull alertInfo, NSString * _Nonnull statusCode) {
-            if ([statusCode isEqualToString:SDKCodeTeenCheckAlert]) {
-                [[MESDKHandler shareHandler] showTeenagerAlertWithViewController:weakSelf andAlertInfo:alertInfo completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
-                    if ([statusCode isEqualToString:SDKCodeTeenAlertExit]) {
-                        NSLog(@"需要强制退出");
-                    } else {
-                        NSLog(@"不需要强制退出");
-                    }
-                }];
-            } else if ([statusCode isEqualToString:SDKCodeTeenCheckSuccess]) {
-                NSMutableDictionary *mDic = [NSMutableDictionary dictionary];
-                [mDic setObject:@(false) forKey:@"open_login"];
-                [mDic setObject:@(true) forKey:@"has_notice"];
-                [mDic setObject:@"3" forKey:@"notice_type"];
-                [mDic setObject:@"防沉迷提示" forKey:@"title"];
-                [mDic setObject:@"根据相关政策，未成年玩家在本时段无法登录游戏哦～" forKey:@"content"];
-                [mDic setObject:@[@{@"msg": @"<a href='missevan-game://return'>我知道了</a>"}] forKey:@"buttons"];
-                [[MESDKHandler shareHandler] showTeenagerAlertWithViewController:weakSelf andAlertInfo:mDic completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
-                    if ([statusCode isEqualToString:SDKCodeTeenAlertExit]) {
-                        NSLog(@"需要强制退出");
-                        exit(0);
-                    } else {
-                        NSLog(@"不需要强制退出");
-                    }
-                }];
-                NSLog(@"正常");
-            } else {
-                NSLog(@"发生错误");
-            }
+    if ([sender isEqual:_teencheck_switch]) {
+        if (sender.isOn) {
+            __weak typeof(self) weakSelf = self;
+            [[MESDKHandler shareHandler] checkTeenagerListenerWithCompletion:^(NSDictionary * _Nonnull alertInfo, NSString * _Nonnull statusCode) {
+                if ([statusCode isEqualToString:SDKCodeTeenCheckAlert]) {
+                    [[MESDKHandler shareHandler] showTeenagerAlertWithViewController:weakSelf andAlertInfo:alertInfo completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
+                        if ([statusCode isEqualToString:SDKCodeTeenAlertExit]) {
+                            NSLog(@"需要强制退出");
+                        } else {
+                            NSLog(@"不需要强制退出");
+                        }
+                    }];
+                } else if ([statusCode isEqualToString:SDKCodeTeenCheckSuccess]) {
+                    NSMutableDictionary *mDic = [NSMutableDictionary dictionary];
+                    [mDic setObject:@(false) forKey:@"open_login"];
+                    [mDic setObject:@(true) forKey:@"has_notice"];
+                    [mDic setObject:@"3" forKey:@"notice_type"];
+                    [mDic setObject:@"防沉迷提示" forKey:@"title"];
+                    [mDic setObject:@"根据相关政策，未成年玩家在本时段无法登录游戏哦～" forKey:@"content"];
+                    [mDic setObject:@[@{@"msg": @"<a href='missevan-game://return'>我知道了</a>"}] forKey:@"buttons"];
+                    [[MESDKHandler shareHandler] showTeenagerAlertWithViewController:weakSelf andAlertInfo:mDic completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
+                        if ([statusCode isEqualToString:SDKCodeTeenAlertExit]) {
+                            NSLog(@"需要强制退出");
+                            exit(0);
+                        } else {
+                            NSLog(@"不需要强制退出");
+                        }
+                    }];
+                    NSLog(@"正常");
+                } else {
+                    NSLog(@"发生错误");
+                }
+            }];
+        } else {
+            [[MESDKHandler shareHandler] stopTeenagerListener];
+        }
+    } else if ([sender isEqual:_api_switch]) {
+        [[MESDKHandler shareHandler] setAPIMode:sender.isOn];
+        UIAlertController *vc = [UIAlertController alertControllerWithTitle:@"设置完 API 请重启 APP" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *exitaction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            exit(0);
         }];
-    } else {
-        [[MESDKHandler shareHandler] stopTeenagerListener];
+        [vc addAction:exitaction];
+        vc.modalPresentationStyle = UIModalPresentationFullScreen;
+        [self presentViewController:vc animated:YES completion:nil];
     }
 }
 
@@ -255,7 +265,7 @@
 - (UIButton *)login_button {
     if (!_login_button) {
         _login_button = [[UIButton alloc] initWithFrame:CGRectMake(15, 210, ([UIScreen mainScreen].bounds.size.width - 60) / 3.f, 40)];
-        [_login_button setTitle:@"登陆" forState:UIControlStateNormal];
+        [_login_button setTitle:@"登录" forState:UIControlStateNormal];
         [_login_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         _login_button.layer.cornerRadius = 5.f;
         _login_button.layer.masksToBounds = YES;
@@ -400,11 +410,28 @@
 }
 - (UISwitch *)teencheck_switch {
     if (!_teencheck_switch) {
-        _teencheck_switch = [[UISwitch alloc] initWithFrame:CGRectMake(105 + ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 320, 50, 40)];
+        _teencheck_switch = [[UISwitch alloc] initWithFrame:CGRectMake(125 + ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 320, 50, 40)];
         [_teencheck_switch setOn:NO];
         [_teencheck_switch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
     }
     return _teencheck_switch;
+}
+- (UILabel *)api_label {
+    if (!_api_label) {
+        _api_label = [[UILabel alloc] initWithFrame:CGRectMake(25 + ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 370, 80, 40)];
+        _api_label.text = [NSString stringWithFormat:@"当前API:%@", [[MESDKHandler shareHandler] getAPIMode] ? @"线上" : @"UAT"];
+        _api_label.textColor = [UIColor blackColor];
+        _api_label.font = [UIFont systemFontOfSize:13.f];
+    }
+    return _api_label;
+}
+- (UISwitch *)api_switch {
+    if (!_api_switch) {
+        _api_switch = [[UISwitch alloc] initWithFrame:CGRectMake(125 + ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 370, 50, 40)];
+        [_api_switch setOn:[[MESDKHandler shareHandler] getAPIMode]];
+        [_api_switch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
+    }
+    return _api_switch;
 }
 
 
