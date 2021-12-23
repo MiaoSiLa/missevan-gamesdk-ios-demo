@@ -216,9 +216,9 @@
     if ([sender isEqual:_teencheck_switch]) {
         if (sender.isOn) {
             __weak typeof(self) weakSelf = self;
-            [[MESDKHandler shareHandler] checkTeenagerListenerWithCompletion:^(NSDictionary * _Nonnull alertInfo, NSString * _Nonnull statusCode) {
+            [[MESDKHandler shareHandler] checkTeenagerListenerWithCompletion:^(id _Nonnull returnValue, NSString * _Nonnull statusCode) {
                 if ([statusCode isEqualToString:SDKCodeTeenCheckAlert]) {
-                    [[MESDKHandler shareHandler] showTeenagerAlertWithViewController:weakSelf andAlertInfo:alertInfo completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
+                    [[MESDKHandler shareHandler] showTeenagerAlertWithViewController:weakSelf andAlertInfo:returnValue completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
                         if ([statusCode isEqualToString:SDKCodeTeenAlertExit]) {
                             NSLog(@"需要强制退出");
                         } else {
@@ -228,7 +228,7 @@
                 } else if ([statusCode isEqualToString:SDKCodeTeenCheckSuccess]) {
                     NSLog(@"正常");
                 } else {
-                    NSLog(@"发生错误");
+                    NSLog(@"发生错误, %@", returnValue);
                 }
             }];
         } else {
