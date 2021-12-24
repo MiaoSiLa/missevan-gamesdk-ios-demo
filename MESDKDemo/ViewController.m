@@ -221,6 +221,7 @@
                     [[MESDKHandler shareHandler] showTeenagerAlertWithViewController:weakSelf andAlertInfo:returnValue completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
                         if ([statusCode isEqualToString:SDKCodeTeenAlertExit]) {
                             NSLog(@"需要强制退出");
+                            exit(0);
                         } else {
                             NSLog(@"不需要强制退出");
                         }
