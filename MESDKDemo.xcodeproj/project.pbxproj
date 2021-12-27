@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8D94F6622779B3B700B21F95 /* MESDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8D94F6612779B3B700B21F95 /* MESDK.framework */; };
 		8D9F57B42750D548003B62D8 /* MKAnnotationView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D9F57912750D547003B62D8 /* MKAnnotationView+WebCache.m */; };
 		8D9F57B52750D548003B62D8 /* SDWebImageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D9F57952750D547003B62D8 /* SDWebImageManager.m */; };
 		8D9F57B62750D548003B62D8 /* SDWebImageDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D9F57962750D547003B62D8 /* SDWebImageDecoder.m */; };
@@ -34,7 +35,6 @@
 		8DA5CD38273B730C0028ACF3 /* MESDKDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5CD37273B730C0028ACF3 /* MESDKDemoTests.m */; };
 		8DA5CD43273B730C0028ACF3 /* MESDKDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8DA5CD42273B730C0028ACF3 /* MESDKDemoUITests.m */; };
 		8DA5CDF7273B87A00028ACF3 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DA5CDF6273B87890028ACF3 /* libc++.tbd */; };
-		8DC6FF51277491ED00DE1C42 /* MESDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8DC6FF50277491ED00DE1C42 /* MESDK.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +55,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		8D94F6612779B3B700B21F95 /* MESDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MESDK.framework; sourceTree = "<group>"; };
 		8D9F57912750D547003B62D8 /* MKAnnotationView+WebCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "MKAnnotationView+WebCache.m"; sourceTree = "<group>"; };
 		8D9F57922750D547003B62D8 /* CALayer+WeCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CALayer+WeCache.h"; sourceTree = "<group>"; };
 		8D9F57932750D547003B62D8 /* UIImageView+WebCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImageView+WebCache.h"; sourceTree = "<group>"; };
@@ -108,7 +109,6 @@
 		8DA5CD42273B730C0028ACF3 /* MESDKDemoUITests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MESDKDemoUITests.m; sourceTree = "<group>"; };
 		8DA5CD44273B730C0028ACF3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8DA5CDF6273B87890028ACF3 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
-		8DC6FF50277491ED00DE1C42 /* MESDK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MESDK.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,7 +117,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DA5CDF7273B87A00028ACF3 /* libc++.tbd in Frameworks */,
-				8DC6FF51277491ED00DE1C42 /* MESDK.framework in Frameworks */,
+				8D94F6622779B3B700B21F95 /* MESDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -239,7 +239,7 @@
 		8DA5CDF0273B86430028ACF3 /* MESDK */ = {
 			isa = PBXGroup;
 			children = (
-				8DC6FF50277491ED00DE1C42 /* MESDK.framework */,
+				8D94F6612779B3B700B21F95 /* MESDK.framework */,
 				8DA295F8275DF93C00A29AA1 /* MESDKResource.bundle */,
 			);
 			path = MESDK;
