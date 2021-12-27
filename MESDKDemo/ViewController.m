@@ -24,8 +24,6 @@
 
 @property (nonatomic, strong) UIButton *login_button;
 @property (nonatomic, strong) UIButton *logout_button;
-@property (nonatomic, strong) UIButton *protocol_button;
-@property (nonatomic, strong) UIButton *realname_button;
 @property (nonatomic, strong) UIButton *exit_button;
 
 @property (nonatomic, strong) UIButton *role_button;
@@ -33,8 +31,6 @@
 
 @property (nonatomic, strong) UILabel *api_label;
 @property (nonatomic, strong) UISwitch *api_switch;
-@property (nonatomic, strong) UILabel *teencheck_label;
-@property (nonatomic, strong) UISwitch *teencheck_switch;
 
 @end
 
@@ -46,7 +42,7 @@
     
     [self createView];
     
-    [self clickProtocolButtonAction];
+    [self ProtocolAction];
 }
 
 #pragma mark - CreateView
@@ -59,13 +55,9 @@
     
     [self.view addSubview:self.login_button];
     [self.view addSubview:self.logout_button];
-    [self.view addSubview:self.protocol_button];
-    [self.view addSubview:self.realname_button];
     [self.view addSubview:self.exit_button];
     [self.view addSubview:self.role_button];
     [self.view addSubview:self.notify_button];
-    [self.view addSubview:self.teencheck_label];
-    [self.view addSubview:self.teencheck_switch];
     [self.view addSubview:self.api_label];
     [self.view addSubview:self.api_switch];
 }
@@ -96,6 +88,9 @@
                     [[MESDKHandler shareHandler] showRealNameCertificateViewWithViewController:weakSelf completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
                         if ([statusCode isEqualToString:SDKCodeCertificateSuccess]) {
                             NSLog(@"认证成功");
+                            [[MESDKHandler shareHandler] hideRealNameCertificateView];
+                            
+                            [weakSelf startTeenagerListener];
                         } else if ([statusCode isEqualToString:SDKCodeUserCancel]) {
                             NSLog(@"用户取消");
                             [weakSelf clickLogoutButtonAction];
@@ -103,6 +98,8 @@
                             NSLog(@"发生错误");
                         }
                     }];
+                } else {
+                    [weakSelf startTeenagerListener];
                 }
             }
         } else if ([statusCode isEqualToString:SDKCodeTeenCheckAlert]) {
@@ -135,6 +132,8 @@
     }];
 }
 - (void)clickLogoutButtonAction {
+    [self stopTeenagerListener];
+    
     __weak typeof(self) weakSelf = self;
     [[MESDKHandler shareHandler] logoutActionWithCompletion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeLogoutSuccess]) {
@@ -148,7 +147,7 @@
         }
     }];
 }
-- (void)clickProtocolButtonAction {
+- (void)ProtocolAction {
     [[MESDKHandler shareHandler] showProtocolViewWithViewController:self completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
         if ([statusCode isEqualToString:SDKCodeProtocolConfirm]) {
             NSLog(@"确认协议");
@@ -159,19 +158,6 @@
         } else if ([statusCode isEqualToString:SDKCodeProtocolUpdateReject]) {
             NSLog(@"拒绝更新协议");
             exit(0);
-        } else {
-            NSLog(@"发生错误");
-        }
-    }];
-}
-- (void)clickRealNameButtonAction {
-    __weak typeof(self) weakSelf = self;
-    [[MESDKHandler shareHandler] showRealNameCertificateViewWithViewController:self completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
-        if ([statusCode isEqualToString:SDKCodeCertificateSuccess]) {
-            NSLog(@"认证成功");
-        } else if ([statusCode isEqualToString:SDKCodeUserCancel]) {
-            NSLog(@"用户取消");
-            [weakSelf clickLogoutButtonAction];
         } else {
             NSLog(@"发生错误");
         }
@@ -213,38 +199,36 @@
     }];
 }
 - (void)switchAction:(UISwitch *)sender {
-    if ([sender isEqual:_teencheck_switch]) {
-        if (sender.isOn) {
-            __weak typeof(self) weakSelf = self;
-            [[MESDKHandler shareHandler] checkTeenagerListenerWithCompletion:^(id _Nonnull returnValue, NSString * _Nonnull statusCode) {
-                if ([statusCode isEqualToString:SDKCodeTeenCheckAlert]) {
-                    [[MESDKHandler shareHandler] showTeenagerAlertWithViewController:weakSelf andAlertInfo:returnValue completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
-                        if ([statusCode isEqualToString:SDKCodeTeenAlertExit]) {
-                            NSLog(@"需要强制退出");
-                            exit(0);
-                        } else {
-                            NSLog(@"不需要强制退出");
-                        }
-                    }];
-                } else if ([statusCode isEqualToString:SDKCodeTeenCheckSuccess]) {
-                    NSLog(@"正常");
+    [[MESDKHandler shareHandler] setAPIMode:sender.isOn];
+    UIAlertController *vc = [UIAlertController alertControllerWithTitle:@"设置完 API 请重启 APP" message:@"" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *exitaction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        exit(0);
+    }];
+    [vc addAction:exitaction];
+    vc.modalPresentationStyle = UIModalPresentationFullScreen;
+    [self presentViewController:vc animated:YES completion:nil];
+}
+- (void)startTeenagerListener {
+    __weak typeof(self) weakSelf = self;
+    [[MESDKHandler shareHandler] checkTeenagerListenerWithCompletion:^(id _Nonnull returnValue, NSString * _Nonnull statusCode) {
+        if ([statusCode isEqualToString:SDKCodeTeenCheckAlert]) {
+            [[MESDKHandler shareHandler] showTeenagerAlertWithViewController:weakSelf andAlertInfo:returnValue completion:^(id  _Nullable returnValue, NSString * _Nonnull statusCode) {
+                if ([statusCode isEqualToString:SDKCodeTeenAlertExit]) {
+                    NSLog(@"需要强制退出");
+                    exit(0);
                 } else {
-                    NSLog(@"发生错误, %@", returnValue);
+                    NSLog(@"不需要强制退出");
                 }
             }];
+        } else if ([statusCode isEqualToString:SDKCodeTeenCheckSuccess]) {
+            NSLog(@"正常");
         } else {
-            [[MESDKHandler shareHandler] stopTeenagerListener];
+            NSLog(@"发生错误, %@", returnValue);
         }
-    } else if ([sender isEqual:_api_switch]) {
-        [[MESDKHandler shareHandler] setAPIMode:sender.isOn];
-        UIAlertController *vc = [UIAlertController alertControllerWithTitle:@"设置完 API 请重启 APP" message:@"" preferredStyle:UIAlertControllerStyleAlert];
-        UIAlertAction *exitaction = [UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            exit(0);
-        }];
-        [vc addAction:exitaction];
-        vc.modalPresentationStyle = UIModalPresentationFullScreen;
-        [self presentViewController:vc animated:YES completion:nil];
-    }
+    }];
+}
+- (void)stopTeenagerListener {
+    [[MESDKHandler shareHandler] stopTeenagerListener];
 }
 
 #pragma mark - Get/Set
@@ -261,20 +245,6 @@
         [_login_button addTarget:self action:@selector(clickLoginButtonAction) forControlEvents:UIControlEventTouchUpInside];
     }
     return _login_button;
-}
-- (UIButton *)protocol_button {
-    if (!_protocol_button) {
-        _protocol_button = [[UIButton alloc] initWithFrame:CGRectMake(45 + (([UIScreen mainScreen].bounds.size.width - 60) / 3.f) * 2, 210, ([UIScreen mainScreen].bounds.size.width - 60) / 3.f, 40)];
-        [_protocol_button setTitle:@"协议弹窗" forState:UIControlStateNormal];
-        [_protocol_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        _protocol_button.layer.cornerRadius = 5.f;
-        _protocol_button.layer.masksToBounds = YES;
-        _protocol_button.layer.borderWidth = .5f;
-        _protocol_button.layer.borderColor = [UIColor blackColor].CGColor;
-        
-        [_protocol_button addTarget:self action:@selector(clickProtocolButtonAction) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _protocol_button;
 }
 - (UIButton *)logout_button {
     if (!_logout_button) {
@@ -329,23 +299,9 @@
     }
     return _avatar_imgview;
 }
-- (UIButton *)realname_button {
-    if (!_realname_button) {
-        _realname_button = [[UIButton alloc] initWithFrame:CGRectMake(15, 260, ([UIScreen mainScreen].bounds.size.width - 60) / 3.f, 40)];
-        [_realname_button setTitle:@"实名认证" forState:UIControlStateNormal];
-        [_realname_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        _realname_button.layer.cornerRadius = 5.f;
-        _realname_button.layer.masksToBounds = YES;
-        _realname_button.layer.borderWidth = .5f;
-        _realname_button.layer.borderColor = [UIColor blackColor].CGColor;
-        
-        [_realname_button addTarget:self action:@selector(clickRealNameButtonAction) forControlEvents:UIControlEventTouchUpInside];
-    }
-    return _realname_button;
-}
 - (UIButton *)exit_button {
     if (!_exit_button) {
-        _exit_button = [[UIButton alloc] initWithFrame:CGRectMake(30 + (([UIScreen mainScreen].bounds.size.width - 60) / 3.f), 260, ([UIScreen mainScreen].bounds.size.width - 60) / 3.f, 40)];
+        _exit_button = [[UIButton alloc] initWithFrame:CGRectMake(45 + (([UIScreen mainScreen].bounds.size.width - 60) / 3.f) * 2, 210, ([UIScreen mainScreen].bounds.size.width - 60) / 3.f, 40)];
         [_exit_button setTitle:@"退出游戏" forState:UIControlStateNormal];
         [_exit_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         _exit_button.layer.cornerRadius = 5.f;
@@ -359,7 +315,7 @@
 }
 - (UIButton *)role_button {
     if (!_role_button) {
-        _role_button = [[UIButton alloc] initWithFrame:CGRectMake(15, 320, ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 40)];
+        _role_button = [[UIButton alloc] initWithFrame:CGRectMake(15, 270, ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 40)];
         [_role_button setTitle:@"创建角色" forState:UIControlStateNormal];
         [_role_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         _role_button.layer.cornerRadius = 5.f;
@@ -373,7 +329,7 @@
 }
 - (UIButton *)notify_button {
     if (!_notify_button) {
-        _notify_button = [[UIButton alloc] initWithFrame:CGRectMake(15, 370, ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 40)];
+        _notify_button = [[UIButton alloc] initWithFrame:CGRectMake(30 + ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 270, ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 40)];
         [_notify_button setTitle:@"通知区服" forState:UIControlStateNormal];
         [_notify_button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         _notify_button.layer.cornerRadius = 5.f;
@@ -385,26 +341,9 @@
     }
     return _notify_button;
 }
-- (UILabel *)teencheck_label {
-    if (!_teencheck_label) {
-        _teencheck_label = [[UILabel alloc] initWithFrame:CGRectMake(25 + ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 320, 80, 40)];
-        _teencheck_label.text = @"防沉迷轮询：";
-        _teencheck_label.textColor = [UIColor blackColor];
-        _teencheck_label.font = [UIFont systemFontOfSize:13.f];
-    }
-    return _teencheck_label;
-}
-- (UISwitch *)teencheck_switch {
-    if (!_teencheck_switch) {
-        _teencheck_switch = [[UISwitch alloc] initWithFrame:CGRectMake(125 + ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 320, 50, 40)];
-        [_teencheck_switch setOn:NO];
-        [_teencheck_switch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
-    }
-    return _teencheck_switch;
-}
 - (UILabel *)api_label {
     if (!_api_label) {
-        _api_label = [[UILabel alloc] initWithFrame:CGRectMake(25 + ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 370, 80, 40)];
+        _api_label = [[UILabel alloc] initWithFrame:CGRectMake(15, 330, 80, 40)];
         _api_label.text = [NSString stringWithFormat:@"当前API:%@", [[MESDKHandler shareHandler] getAPIMode] ? @"线上" : @"UAT"];
         _api_label.textColor = [UIColor blackColor];
         _api_label.font = [UIFont systemFontOfSize:13.f];
@@ -413,7 +352,7 @@
 }
 - (UISwitch *)api_switch {
     if (!_api_switch) {
-        _api_switch = [[UISwitch alloc] initWithFrame:CGRectMake(125 + ([UIScreen mainScreen].bounds.size.width - 45) / 2.f, 370, 50, 40)];
+        _api_switch = [[UISwitch alloc] initWithFrame:CGRectMake(105 , 330, 50, 40)];
         [_api_switch setOn:[[MESDKHandler shareHandler] getAPIMode]];
         [_api_switch addTarget:self action:@selector(switchAction:) forControlEvents:UIControlEventValueChanged];
     }

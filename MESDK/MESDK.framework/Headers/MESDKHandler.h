@@ -89,6 +89,7 @@ typedef void (^SDKResponseBlock)(id _Nullable returnValue, NSString *statusCode)
 
 // 显示实名认证弹窗
 - (void)showRealNameCertificateViewWithViewController:(UIViewController *)viewController completion:(SDKResponseBlock)completion;
+- (void)hideRealNameCertificateView;
 
 // 显示防沉迷弹窗
 - (void)showTeenagerAlertWithViewController:(UIViewController *)viewController andAlertInfo:(id)alertObj completion:(SDKResponseBlock)completion;
